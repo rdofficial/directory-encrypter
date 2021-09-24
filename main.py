@@ -1,18 +1,18 @@
-	"""
+"""
 main.py - Directory Encrypter
 
 Created by : Rishav Das (https://github.com/rdofficial/)
 Created on : September 20, 2021
 
-Last modified by : -
-Last modified on : -
+Last modified by : Rishav Das (https://github.com/rdofficial/)
+Last modified on : September 24, 2021
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
 """
 
 # Importing the required functions and modules
-from os import path, listdir, rename, chdir
+from os import path, listdir, rename, chdir, remove
 from base64 import b64encode, b64decode
 from sys import platform
 
@@ -61,8 +61,12 @@ This class creates a config file in the directory post the encryption process, w
 		# Calling the generateKey() method in order to generate the key for the encryption
 		self.generateKey()
 
-	def start_encryption(self, directory = self.directory, recursive = False):
+	def start_encryption(self, directory = None, recursive = False):
 		""" This method / function serves the functionality of encrypting each of the files in the directory tree, and then saving them back. This function uses the class variables in order to execute the task properly, also a config file is created by the which contains the details of the encryption by then. """
+
+		# Setting the directory to the user specified if not recalled
+		if directory == None:
+			directory = self.directory
 
 		# Changing the current working directory to the user specified directory
 		chdir(directory)
@@ -76,10 +80,14 @@ This class creates a config file in the directory post the encryption process, w
 			del config
 
 		# Encrypting each files in the current directory
-		for file in listdir(directory):
+		for file in listdir():
 			# Iterating each of the contents of the directory
 
-			if path.isfile(file):
+			if file == '.config_encryption':
+				# If teh currently iterated item is the config file, then we skip the part
+
+				continue
+			elif path.isfile(file):
 				# If the currently iterated item is a file, then we continue to encrypt it
 
 				# Encrypting its contents and saving it back
@@ -101,10 +109,14 @@ This class creates a config file in the directory post the encryption process, w
 			else:
 				# If the currently iterated item is neither a file nor a directory, then we raise a fucking error with a custom message
 
-				raise TypeError(f'{file} is neither a file nor a directory.')
+				raise TypeError(f'{path.join(directory, file)} is neither a file nor a directory.')
 
-	def start_decryption(self, directory = self.directory, recursive = False):
-		""" This method / function. """
+	def start_decryption(self, directory = None, recursive = False):
+		""" This method / function serves the functionality of decrypting each of the files in the directory tree, and then saving them back. This function uses the class variables in order to execute the task properly, also it rechecks the config file information with the user entered credentials. """
+
+		# Setting the directory to the user specified if not recalled
+		if directory == None:
+			directory = self.directory
 
 		# Changing the current working directory to the user specified directory
 		chdir(directory)
@@ -118,17 +130,21 @@ This class creates a config file in the directory post the encryption process, w
 			if password == config:
 				# If the passwords are matched, then we continue
 
-				pass
+				remove('.config_encryption')
 			else:
 				# If the passwords fail to match, then we raise a fucking error with a custom message
 
 				raise ValueError(f'Incorrect password for the encrypted folder "{self.directory}"')
 
 		# Encrypting each files in the current directory
-		for file in listdir(directory):
+		for file in listdir():
 			# Iterating each of the contents of the directory
 
-			if path.isfile(file):
+			if file == '.config_encryption':
+				# If teh currently iterated item is the config file, then we skip the part
+
+				continue
+			elif path.isfile(file):
 				# If the currently iterated item is a file, then we continue to decrypt it
 
 				# Decrypting the contents and saving it back
@@ -150,7 +166,7 @@ This class creates a config file in the directory post the encryption process, w
 			else:
 				# If the currently iterated item is neither a file nor a directory, then we raise a fucking error with a custom message
 
-				raise TypeError(f'{file} is neither a file nor a directory.')
+				raise TypeError(f'{path.join(directory, file)} is neither a file nor a directory.')
 
 	def encrypt(self, text = ''):
 		""" This method serves the functionality of encrypting the plain texts with the password stored in the class properties. The function uses the self.key generated key in order to encrypt the text. The key must be generated before calling this function/method in order to prevent any errors. """
@@ -237,3 +253,40 @@ This class creates a config file in the directory post the encryption process, w
 
 		# Saving the key to the class property / variable 'self.key'
 		self.key = key
+
+def main():
+	# Asking the user to enter the directory location for encryption / decryption
+	directory = input('Enter the directory location : ')
+
+	# Asking the user to enter a password for the encryption / decryption
+	password = input('Enter the password for encryption / decryption : ')
+
+	# Creating an directory encrypter object in order to work properly
+	encrypter = DirectoryEncrypter(password, directory)
+
+	# Asking the user the choice of whether to encrypt or to decrypt
+	choice = input('\nChoose an option :\n1. Encrypt\n2. Decrypt\nEnter your choice : ')
+
+	if choice == '1':
+		# If the user chooses the option to encrypt the specified directory, then we continue
+
+		encrypter.start_encryption()
+	else:
+		# If the user chooses the optio to decrypt the specified directory, then we continue
+
+		encrypter.start_decryption()
+
+	# Displaying the message on console screen after the processes are done executing
+	print('\n[ Process completed ]')
+
+if __name__ == '__main__':
+	try:
+		main()
+	except KeyboardInterrupt:
+		# If the user presses CTRL+C key combo, then we exit the script
+
+		exit()
+	except Exception as e:
+		# If there are any errors encountered during the process, then we display the error message on the console screen and exit
+
+		print(f'[ Error : {e} ]')
