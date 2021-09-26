@@ -91,6 +91,7 @@ This class creates a config file in the directory post the encryption process, w
 				# If the currently iterated item is a file, then we continue to encrypt it
 
 				# Encrypting its contents and saving it back
+				chdir(directory)
 				contents = open(file, 'r').read()
 				contents = self.encrypt(text = contents)
 				open(file, 'w+').write(contents)
@@ -98,13 +99,18 @@ This class creates a config file in the directory post the encryption process, w
 
 				# Renaming the file after encrypting its contents
 				newname = self.encrypt(text = file)
+				newname = newname.replace('/', '#')
 				rename(file, newname)
 				del newname
+
+				# Displaying the message of a file being encrypted
+				print(f'[#] File encrypted : {path.join(directory, file)}')
 			elif path.isdir(file):
 				# If the currently iterated item is a directory, then we continue to decrypt it
 
 				# Re-calling the function with opening the sub-folder
 				directory = path.join(directory, file)
+				print(f'[$] Moving inside a directory : {directory}')
 				self.start_encryption(directory = directory, recursive = True)
 			else:
 				# If the currently iterated item is neither a file nor a directory, then we raise a fucking error with a custom message
@@ -154,6 +160,7 @@ This class creates a config file in the directory post the encryption process, w
 				del contents
 
 				# Renaming the file after decrypting its contents
+				newname = newname.replace('#', '/')
 				newname = self.decrypt(text = file)
 				rename(file, newname)
 				del newname
@@ -271,10 +278,14 @@ def main():
 		# If the user chooses the option to encrypt the specified directory, then we continue
 
 		encrypter.start_encryption()
-	else:
+	elif choice == '2':
 		# If the user chooses the optio to decrypt the specified directory, then we continue
 
 		encrypter.start_decryption()
+	else:
+		# If the the user chooses an unavailable option, then we raise an error with custom message
+
+		raise ValueError('No such options available')
 
 	# Displaying the message on console screen after the processes are done executing
 	print('\n[ Process completed ]')
@@ -289,4 +300,5 @@ if __name__ == '__main__':
 	except Exception as e:
 		# If there are any errors encountered during the process, then we display the error message on the console screen and exit
 
-		print(f'[ Error : {e} ]')
+		# print(f'[ Error : {e} ]')
+		raise e

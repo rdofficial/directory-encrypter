@@ -1,0 +1,8 @@
+# GIT Ignore List - Directory Encrypter
+# ----
+# 1. Ignore the testing scripts and waste folders
+# ----
+
+test
+test-folder/
+tests/
