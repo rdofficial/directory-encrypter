@@ -5,7 +5,10 @@ Created by : Rishav Das (https://github.com/rdofficial/)
 Created on : September 20, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : September 24, 2021
+Last modified on : September 27, 2021
+
+Changes made in the last modifications :
+1. Removed the error of rendering the list of contents in a directory, thus making the enryption process more error free.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -79,8 +82,33 @@ This class creates a config file in the directory post the encryption process, w
 			open('.config_encryption', 'w+').write(config)
 			del config
 
+		# Creating a list of the contents in the current directory
+		# ----
+		items = listdir()
+		file_list = []
+		dir_list = []
+
+		for item in items:
+			if path.isfile(item):
+				# If the currently iterated item is a file, then we append it to the file list
+
+				file_list.append(item)
+			elif path.isdir(item):
+				# If the currently iterated item is a directory, then we append it to the directory list
+
+				dir_list.append(item)
+
+		for item in dir_list:
+			# Appending items from dir_list to the file_list
+
+			file_list.append(item)
+
+		items = file_list
+		del file_list, dir_list
+		# ----
+
 		# Encrypting each files in the current directory
-		for file in listdir():
+		for file in items:
 			# Iterating each of the contents of the directory
 
 			if file == '.config_encryption':
@@ -142,8 +170,33 @@ This class creates a config file in the directory post the encryption process, w
 
 				raise ValueError(f'Incorrect password for the encrypted folder "{self.directory}"')
 
+		# Creating a list of the contents in the current directory
+		# ----
+		items = listdir()
+		file_list = []
+		dir_list = []
+
+		for item in items:
+			if path.isfile(item):
+				# If the currently iterated item is a file, then we append it to the file list
+
+				file_list.append(item)
+			elif path.isdir(item):
+				# If the currently iterated item is a directory, then we append it to the directory list
+
+				dir_list.append(item)
+
+		for item in dir_list:
+			# Appending items from dir_list to the file_list
+
+			file_list.append(item)
+
+		items = file_list
+		del file_list, dir_list
+		# ----
+
 		# Encrypting each files in the current directory
-		for file in listdir():
+		for file in items:
 			# Iterating each of the contents of the directory
 
 			if file == '.config_encryption':
@@ -160,8 +213,8 @@ This class creates a config file in the directory post the encryption process, w
 				del contents
 
 				# Renaming the file after decrypting its contents
-				newname = newname.replace('#', '/')
-				newname = self.decrypt(text = file)
+				newname = file.replace('#', '/')
+				newname = self.decrypt(text = newname)
 				rename(file, newname)
 				del newname
 			elif path.isdir(file):
@@ -300,5 +353,4 @@ if __name__ == '__main__':
 	except Exception as e:
 		# If there are any errors encountered during the process, then we display the error message on the console screen and exit
 
-		# print(f'[ Error : {e} ]')
-		raise e
+		print(f'[ Error : {e} ]')
