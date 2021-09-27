@@ -8,7 +8,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : September 27, 2021
 
 Changes made in the last modifications :
-1. Removed the error of rendering the list of contents in a directory, thus making the enryption process more error free.
+1. Removed the error of rendering the list of contents in a directory, thus making the encryption process more error free.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -18,6 +18,28 @@ Authors contributed to this script (Add your name below if you have contributed)
 from os import path, listdir, rename, chdir, remove
 from base64 import b64encode, b64decode
 from sys import platform
+
+# Checking whether color codes are supported or not
+if 'linux' in platform:
+	# If the platform type is of linux, then the color codes are supported
+
+	red = '\033[91m'
+	green = '\033[92m'
+	yellow = '\033[93m'
+	blue = '\033[94m'
+	red_rev = '\033[07;91m'
+	yellow_rev = '\033[07;93m'
+	defcol = '\033[00m'
+else:
+	# Если тип компьютера не линукс
+
+	red = ''
+	green = ''
+	yellow = ''
+	blue = ''
+	red_rev = ''
+	yellow_rev = ''
+	defcol = ''
 
 class DirectoryEncrypter:
 	"""
