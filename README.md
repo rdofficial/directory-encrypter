@@ -5,3 +5,8 @@ This tool serves the functionality of serving the encryption and decryption of d
 ### Note
 
 * The tool is very rough, there are certain times when during the execution, wrong files may get destroyed by mistake.
+* The password for the encryption should be noted down and remembered properly, because without that password, you cannot retrieve back the files.
+
+### About the author
+
+This project is created by [Rishav Das](https://github.com/rdofficial/), on September 20, 2021.
