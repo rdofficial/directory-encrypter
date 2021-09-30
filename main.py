@@ -5,10 +5,10 @@ Created by : Rishav Das (https://github.com/rdofficial/)
 Created on : September 20, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : September 27, 2021
+Last modified on : October 1, 2021
 
 Changes made in the last modifications :
-1. Removed the error of rendering the list of contents in a directory, thus making the encryption process more error free.
+1. Updated the print commands with colored output feature.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -154,13 +154,13 @@ This class creates a config file in the directory post the encryption process, w
 				del newname
 
 				# Displaying the message of a file being encrypted
-				print(f'[#] File encrypted : {path.join(directory, file)}')
+				print(f'[{green}#{defcol}] File encrypted : {yellow}{path.join(directory, file)}{defcol}')
 			elif path.isdir(file):
 				# If the currently iterated item is a directory, then we continue to decrypt it
 
 				# Re-calling the function with opening the sub-folder
 				directory = path.join(directory, file)
-				print(f'[$] Moving inside a directory : {directory}')
+				print(f'[{yellow}${defcol}] Moving inside a directory : {blue}{directory}{defcol}')
 				self.start_encryption(directory = directory, recursive = True)
 			else:
 				# If the currently iterated item is neither a file nor a directory, then we raise a fucking error with a custom message
@@ -239,11 +239,15 @@ This class creates a config file in the directory post the encryption process, w
 				newname = self.decrypt(text = newname)
 				rename(file, newname)
 				del newname
+
+				# Displaying the message of a file being encrypted
+				print(f'[{green}#{defcol}] File encrypted : {yellow}{path.join(directory, file)}{defcol}')
 			elif path.isdir(file):
 				# If the currently iterated item is a directory, then we continue to decrypt it
 
 				# Re-calling the function with opening the sub-folder
 				directory = path.join(directory, file)
+				print(f'[{yellow}${defcol}] Moving inside a directory : {blue}{directory}{defcol}')
 				self.start_decryption(directory = directory, recursive = True)
 			else:
 				# If the currently iterated item is neither a file nor a directory, then we raise a fucking error with a custom message
@@ -338,16 +342,18 @@ This class creates a config file in the directory post the encryption process, w
 
 def main():
 	# Asking the user to enter the directory location for encryption / decryption
-	directory = input('Enter the directory location : ')
+	directory = input(blue + 'Enter the directory location : ' + yellow)
+	print(defcol, end = '')
 
 	# Asking the user to enter a password for the encryption / decryption
-	password = input('Enter the password for encryption / decryption : ')
+	password = input(blue + 'Enter the password for encryption / decryption : ' + yellow)
+	print(defcol, end = '')
 
 	# Creating an directory encrypter object in order to work properly
 	encrypter = DirectoryEncrypter(password, directory)
 
 	# Asking the user the choice of whether to encrypt or to decrypt
-	choice = input('\nChoose an option :\n1. Encrypt\n2. Decrypt\nEnter your choice : ')
+	choice = input(blue + f'\nChoose an option :\n{yellow}1.{defcol} Encrypt\n{yellow}2.{blue} Decrypt\nEnter your choice : ' + yellow)
 
 	if choice == '1':
 		# If the user chooses the option to encrypt the specified directory, then we continue
@@ -363,7 +369,7 @@ def main():
 		raise ValueError('No such options available')
 
 	# Displaying the message on console screen after the processes are done executing
-	print('\n[ Process completed ]')
+	print(f'\n{yellow}[{green} Process completed {yellow}]{defcol}')
 
 if __name__ == '__main__':
 	try:
@@ -375,4 +381,4 @@ if __name__ == '__main__':
 	except Exception as e:
 		# If there are any errors encountered during the process, then we display the error message on the console screen and exit
 
-		print(f'[ Error : {e} ]')
+		print(red_rev + f'[ Error : {e} ]' + defcol)
